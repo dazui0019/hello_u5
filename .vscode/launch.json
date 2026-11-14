@@ -1,0 +1,26 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "STM32: Debug (pyOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/hello_u5.elf",
+            "servertype": "pyocd",
+            "overrideGDBServerStartedRegex": "GDB server (started|listening) (at|on) port",
+            "serverpath": "pyocd",
+            "targetId": "stm32u585ciux",
+            "gdbPath": "arm-none-eabi-gdb",
+            "serverArgs": ["--frequency", "10000000", "--no-wait"],
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
+            "overrideResetCommands": ["monitor reset halt"],
+            "overrideRestartCommands": ["monitor reset halt"],
+            "preLaunchTask": "Debug: Prepare GDB"
+        }
+    ]
+}

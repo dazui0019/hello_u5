@@ -1,0 +1,48 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}",
+    "cmake.useCMakePresets": "always",
+    "C_Cpp.default.compileCommands": "${workspaceFolder}/build/Debug/compile_commands.json",
+    "clangd.arguments": [
+        "--compile-commands-dir=${workspaceFolder}/build/Debug"
+    ],
+    "cortex-debug.variableUseNaturalFormat": false,
+    "actionButtons": {
+        "defaultColor": "none",
+        "reloadButton": null,
+        "loadNpmCommands": false,
+        "inheritGlobalCommands": false,
+        "commands": [
+            {
+                "name": "$(tools) 编译 Debug",
+                "tooltip": "保存文件并配置、编译 Debug 固件",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": ["CMake: Build Debug"]
+            },
+            {
+                "name": "$(refresh) Rebuild",
+                "tooltip": "保存文件，清理 Debug 构建产物并全量重新编译",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": ["CMake: Rebuild Debug"]
+            },
+            {
+                "name": "$(arrow-down) 下载 Debug",
+                "tooltip": "编译 Debug 固件并通过 pyOCD 下载到 STM32U585",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": ["pyOCD: Flash Debug"]
+            },
+            {
+                "name": "$(debug-alt) 调试",
+                "tooltip": "启动当前调试配置：STM32: Debug (pyOCD)",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.debug.start"
+            }
+        ]
+    }
+}
