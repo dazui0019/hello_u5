@@ -53,6 +53,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf/printf.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_packaged.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_port.c
 )
 
 # Add include paths
@@ -63,6 +65,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/elog_port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/compat
 )
 
 # Add project symbols (macros)
@@ -79,3 +83,12 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+# Optional test entry called explicitly from GDB, never from business tasks.
+option(CBPRINTF_BUILD_SELFTEST "Include cbprintf_port_selftest for on-target verification" OFF)
+if(CBPRINTF_BUILD_SELFTEST)
+    target_sources(${CMAKE_PROJECT_NAME} PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/tests/test_cbprintf.c)
+    target_link_options(${CMAKE_PROJECT_NAME} PRIVATE
+        -Wl,--undefined=cbprintf_port_selftest)
+endif()

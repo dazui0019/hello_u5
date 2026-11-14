@@ -4,13 +4,13 @@
 #include "usart.h"
 
 #include "log.h"
-LOG_MODULE_REGISTER(app);
+LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
 
 osThreadId_t logTaskHandle;
 const osThreadAttr_t logTask_attributes = {
   .name = "logTask",
   .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 2048
+  .stack_size = 4*512
 };
 
 void LogTaskEntry(void *argument)
