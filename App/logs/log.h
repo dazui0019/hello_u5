@@ -2,6 +2,8 @@
 #define _CCU_LOG_H
 
 #include "elog.h"
+#include "log_cfg.h"
+#include <stddef.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -9,12 +11,16 @@ extern "C" {
 
 void log_init();
 
+int log_async_submit(uint8_t level, const char *tag, const char *file,
+                     const char *function, long line, const char *format, ...)
+    __attribute__((format(__printf__, 6, 7)));
+
 /* 业务日志统一使用 Zephyr 风格接口子集，底层输出和运行时过滤沿用 EasyLogger。
  * 每个使用日志的 .c 文件在包含本头文件后注册模块，无需定义 LOG_TAG：
  *   LOG_MODULE_REGISTER(app);                 // 默认 INFO 等级
  *   LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);  // 或显式指定等级
- * 输出使用 LOG_ERR / LOG_WRN / LOG_INF / LOG_DBG / LOG_VRB。
- * LOG_VRB 为扩展接口，需注册为 LOG_LEVEL_VRB 才会输出。
+ * LOG_E/W/I/D/V 根据 log_cfg.h 中的 LOG_USE_ASYNC 选择同步或异步。
+ * LOG_V 和 LOG_ASYNC_V 需注册为 LOG_LEVEL_VRB 才会输出。
  */
 #define LOG_LEVEL_NONE 0
 #define LOG_LEVEL_ERR  ELOG_LVL_ERROR
@@ -56,11 +62,36 @@ void log_init();
         }                                                   \
     } while (0)
 
+#define CCU_LOG_ASYNC_WRITE(level, ...)                       \
+    do {                                                    \
+        if ((level) <= CCU_LOG_MODULE_LEVEL) {               \
+            (void)log_async_submit(level,                    \
+                ccu_log_module_tag(), ELOG_OUTPUT_DIR,       \
+                ELOG_OUTPUT_FUNC, ELOG_OUTPUT_LINE,          \
+                __VA_ARGS__);                               \
+        }                                                   \
+    } while (0)
+
+#define LOG_ASYNC_E(...) CCU_LOG_ASYNC_WRITE(LOG_LEVEL_ERR, __VA_ARGS__)
+#define LOG_ASYNC_W(...) CCU_LOG_ASYNC_WRITE(LOG_LEVEL_WRN, __VA_ARGS__)
+#define LOG_ASYNC_I(...) CCU_LOG_ASYNC_WRITE(LOG_LEVEL_INF, __VA_ARGS__)
+#define LOG_ASYNC_D(...) CCU_LOG_ASYNC_WRITE(LOG_LEVEL_DBG, __VA_ARGS__)
+#define LOG_ASYNC_V(...) CCU_LOG_ASYNC_WRITE(LOG_LEVEL_VRB, __VA_ARGS__)
+
+/* 通用接口：只切换输出路径，模块等级过滤仍然有效。 */
+#if LOG_USE_ASYNC
+#define LOG_E(...) LOG_ASYNC_E(__VA_ARGS__)
+#define LOG_W(...) LOG_ASYNC_W(__VA_ARGS__)
+#define LOG_I(...) LOG_ASYNC_I(__VA_ARGS__)
+#define LOG_D(...) LOG_ASYNC_D(__VA_ARGS__)
+#define LOG_V(...) LOG_ASYNC_V(__VA_ARGS__)
+#else
 #define LOG_E(...) CCU_LOG_MODULE_WRITE(LOG_LEVEL_ERR, elog_e, __VA_ARGS__)
 #define LOG_W(...) CCU_LOG_MODULE_WRITE(LOG_LEVEL_WRN, elog_w, __VA_ARGS__)
 #define LOG_I(...) CCU_LOG_MODULE_WRITE(LOG_LEVEL_INF, elog_i, __VA_ARGS__)
 #define LOG_D(...) CCU_LOG_MODULE_WRITE(LOG_LEVEL_DBG, elog_d, __VA_ARGS__)
 #define LOG_V(...) CCU_LOG_MODULE_WRITE(LOG_LEVEL_VRB, elog_v, __VA_ARGS__)
+#endif
 
 #ifdef __cplusplus
 }

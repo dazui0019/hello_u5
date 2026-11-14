@@ -10,7 +10,7 @@ osThreadId_t logTaskHandle;
 const osThreadAttr_t logTask_attributes = {
   .name = "logTask",
   .priority = (osPriority_t) osPriorityNormal,
-  .stack_size = 4*512
+  .stack_size = 4*128
 };
 
 void LogTaskEntry(void *argument)
@@ -18,7 +18,7 @@ void LogTaskEntry(void *argument)
 
   for(;;)
   {
-    LOG_D("log task.");
+    LOG_ASYNC_I("log task.");
     osDelay(100);
   }
 }

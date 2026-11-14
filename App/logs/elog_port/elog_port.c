@@ -30,6 +30,9 @@
 
 #include "main.h"
 #include "usart.h"
+#include "cmsis_os2.h"
+
+static osMutexId_t outputMutex;
 
 /**
  * EasyLogger port initialize
@@ -39,7 +42,9 @@
 ElogErrCode elog_port_init(void) {
     ElogErrCode result = ELOG_NO_ERR;
 
-    /* add your code here */
+    /* 同步 LOG_x 和异步 logger 任务共用 EasyLogger 的格式化缓冲区。 */
+    outputMutex = osMutexNew(NULL);
+    if (outputMutex == NULL) Error_Handler();
     
     return result;
 }
@@ -49,9 +54,10 @@ ElogErrCode elog_port_init(void) {
  *
  */
 void elog_port_deinit(void) {
-
-    /* add your code here */
-
+    if (outputMutex != NULL) {
+        osMutexDelete(outputMutex);
+        outputMutex = NULL;
+    }
 }
 
 /**
@@ -71,18 +77,23 @@ void elog_port_output(const char *log, size_t size) {
  * output lock
  */
 void elog_port_output_lock(void) {
-    
-    /* add your code here */
-    
+    /* 初始化提示在启动调度器之前输出，此时没有任务并发。 */
+    osKernelState_t state = osKernelGetState();
+    if (state == osKernelRunning || state == osKernelLocked) {
+        /* 调度器锁定时不能等待别的任务释放互斥锁。 */
+        uint32_t timeout = state == osKernelLocked ? 0 : osWaitForever;
+        if (osMutexAcquire(outputMutex, timeout) != osOK) Error_Handler();
+    }
 }
 
 /**
  * output unlock
  */
 void elog_port_output_unlock(void) {
-    
-    /* add your code here */
-    
+    osKernelState_t state = osKernelGetState();
+    if (state == osKernelRunning || state == osKernelLocked) {
+        if (osMutexRelease(outputMutex) != osOK) Error_Handler();
+    }
 }
 
 /**
