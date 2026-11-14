@@ -52,6 +52,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_buf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf/printf.c
 )
 
 # Add include paths
@@ -61,6 +62,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/elog_port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf
 )
 
 # Add project symbols (macros)
