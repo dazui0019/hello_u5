@@ -47,7 +47,7 @@ static enum smf_state_result idle_run(void *obj)
 
   if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY0_GPIO_Port, KEY0_Pin))
   {
-    if (++m->run_count >= 15)
+    if (++m->run_count >= 10)
     {
       smf_set_state(SMF_CTX(m), &states[STATE_WORK]);
     }
@@ -78,7 +78,7 @@ static enum smf_state_result work_run(void *obj)
 
   if (GPIO_PIN_RESET == HAL_GPIO_ReadPin(KEY0_GPIO_Port, KEY0_Pin))
   {
-    if (++m->run_count >= 15)
+    if (++m->run_count >= 10)
     {
       smf_set_state(SMF_CTX(m), &states[STATE_IDLE]);
     }

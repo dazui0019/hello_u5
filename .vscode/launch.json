@@ -2,24 +2,54 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "STM32: Debug (pyOCD)",
+            "name": "STM32: Debug + RTT (OpenOCD)",
             "type": "cortex-debug",
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "executable": "${workspaceFolder}/build/Debug/hello_u5.elf",
-            "servertype": "pyocd",
-            "overrideGDBServerStartedRegex": "GDB server (started|listening) (at|on) port",
-            "serverpath": "pyocd",
-            "targetId": "stm32u585ciux",
+            "servertype": "openocd",
+            "serverpath": "${config:cortex-debug.openocdPath}",
+            "configFiles": [
+                "${workspaceFolder}/.vscode/openocd.cfg"
+            ],
             "gdbPath": "arm-none-eabi-gdb",
-            "serverArgs": ["--frequency", "10000000", "--no-wait"],
+            "rtos": "FreeRTOS",
             "runToEntryPoint": "main",
             "liveWatch": {
                 "enabled": true,
                 "samplesPerSecond": 1
             },
-            "overrideResetCommands": ["monitor reset halt"],
-            "overrideRestartCommands": ["monitor reset halt"],
+            "rttConfig": {
+                "enabled": true,
+                "address": "auto",
+                "decoders": [
+                    {
+                        "label": "STM32 RTT",
+                        "port": 0,
+                        "type": "console"
+                    }
+                ]
+            },
+            "preLaunchTask": "Debug: Prepare GDB"
+        },
+        {
+            "name": "STM32: Debug (OpenOCD)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "executable": "${workspaceFolder}/build/Debug/hello_u5.elf",
+            "servertype": "openocd",
+            "serverpath": "${config:cortex-debug.openocdPath}",
+            "configFiles": [
+                "${workspaceFolder}/.vscode/openocd.cfg"
+            ],
+            "gdbPath": "arm-none-eabi-gdb",
+            "rtos": "FreeRTOS",
+            "runToEntryPoint": "main",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 1
+            },
             "preLaunchTask": "Debug: Prepare GDB"
         }
     ]

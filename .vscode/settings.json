@@ -18,7 +18,9 @@
                 "saveAll": true,
                 "useVsCodeApi": true,
                 "command": "workbench.action.tasks.runTask",
-                "args": ["CMake: Build Debug"]
+                "args": [
+                    "CMake: Build Debug"
+                ]
             },
             {
                 "name": "$(refresh) Rebuild",
@@ -26,30 +28,28 @@
                 "saveAll": true,
                 "useVsCodeApi": true,
                 "command": "workbench.action.tasks.runTask",
-                "args": ["CMake: Rebuild Debug"]
+                "args": [
+                    "CMake: Rebuild Debug"
+                ]
             },
             {
                 "name": "$(arrow-down) 下载 Debug",
-                "tooltip": "编译 Debug 固件并通过 pyOCD 下载到 STM32U585",
+                "tooltip": "编译 Debug 固件并通过 OpenOCD 下载到 STM32U585",
                 "saveAll": true,
                 "useVsCodeApi": true,
                 "command": "workbench.action.tasks.runTask",
-                "args": ["pyOCD: Flash Debug"]
+                "args": [
+                    "OpenOCD: Flash Debug"
+                ]
             },
             {
-                "name": "$(terminal) RTT 终端",
-                "tooltip": "通过 pyOCD 连接运行中的固件，收发 RTT 通道 0（Esc 退出）",
-                "useVsCodeApi": true,
-                "command": "workbench.action.tasks.runTask",
-                "args": ["pyOCD: RTT"]
-            },
-            {
-                "name": "$(debug-alt) 调试",
-                "tooltip": "启动当前调试配置：STM32: Debug (pyOCD)",
+                "name": "$(debug-alt) 调试 / RTT",
+                "tooltip": "启动当前选中的 OpenOCD 调试配置；Debug + RTT 会自动打开 RTT 控制台",
                 "saveAll": true,
                 "useVsCodeApi": true,
                 "command": "workbench.action.debug.start"
             }
         ]
-    }
+    },
+    "cortex-debug.openocdPath": "D:/Toolchain/xpack-openocd-0.12.0-7-win32-x64/xpack-openocd-0.12.0-7/bin/openocd.exe"
 }

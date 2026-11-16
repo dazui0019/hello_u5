@@ -29,7 +29,7 @@
 #include "elog.h"
 #include "log.h"
 #include "printf.h"
-
+#include "SEGGER_RTT.h"
 #include "main.h"
 #include "usart.h"
 #include "cmsis_os2.h"
