@@ -71,8 +71,9 @@ void elog_port_deinit(void) {
 void elog_port_output(const char *log, size_t size) {
     
     /* add your code here */
-    HAL_UART_Transmit(&huart4, (uint8_t*)log, size, 100);
+    HAL_UART_Transmit(&huart1, (uint8_t*)log, size, 100);
     // todo: 串口可以显示颜色, 如果保存到SD卡则不要颜色
+    // todo: 可以再增加一级缓冲区
 }
 
 /**
