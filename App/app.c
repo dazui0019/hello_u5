@@ -4,6 +4,7 @@
 #include "usart.h"
 #include "smf.h"
 #include "gpio.h"
+#include "SEGGER_RTT.h"
 
 #include "log.h"
 LOG_MODULE_REGISTER(app, LOG_LEVEL_DBG);
@@ -108,6 +109,8 @@ void myTaskEntry(void *argument)
 
   /* 初始化，并立即执行 idle_entry() */
   smf_set_initial(SMF_CTX(&machine), &states[STATE_IDLE]);
+
+  SEGGER_RTT_printf(0, "Hello, World!\n");
 
   for (;;)
   {

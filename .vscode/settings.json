@@ -37,6 +37,13 @@
                 "args": ["pyOCD: Flash Debug"]
             },
             {
+                "name": "$(terminal) RTT 终端",
+                "tooltip": "通过 pyOCD 连接运行中的固件，收发 RTT 通道 0（Esc 退出）",
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": ["pyOCD: RTT"]
+            },
+            {
                 "name": "$(debug-alt) 调试",
                 "tooltip": "启动当前调试配置：STM32: Debug (pyOCD)",
                 "saveAll": true,

@@ -58,6 +58,10 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/cbprintf_port.c
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_smf/smf.c
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT_printf.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls/SEGGER_RTT_Syscalls_GCC.c
 )
 
 # Add include paths
@@ -72,6 +76,9 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/compat
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_smf
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Config
 )
 
 # Add project symbols (macros)

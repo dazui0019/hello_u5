@@ -77,6 +77,35 @@
             }]
         },
         {
+            "label": "pyOCD: RTT",
+            "type": "process",
+            "command": "pyocd",
+            "args": [
+                "rtt",
+                "--target", "stm32u585ciux",
+                "--frequency", "10000000",
+                "--no-wait",
+                "--connect", "attach",
+                "--address", "0x20000000",
+                "--size", "0xC0000",
+                "--up-channel-id", "0",
+                "--down-channel-id", "0"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "always",
+                "focus": true,
+                "panel": "dedicated",
+                "clear": true
+            },
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "pyOCD: Flash Debug",
             "type": "process",
             "command": "pyocd",

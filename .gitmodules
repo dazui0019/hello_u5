@@ -1,0 +1,3 @@
+[submodule "Libraries/RTT"]
+	path = Libraries/RTT
+	url = git@github.com:SEGGERMicro/RTT.git
