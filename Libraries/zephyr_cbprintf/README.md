@@ -6,12 +6,30 @@ Arm GNU Toolchain、GNU C11；另外支持 Windows x64 GCC 执行主机测试。
 
 ## 文件与责任
 
+上游文件留在根目录，平台适配集中在 `port/`：
+
+```text
+zephyr_cbprintf/
+├─ cbprintf.h
+├─ cbprintf_internal.h
+├─ cbprintf_enums.h
+├─ cbprintf_packaged.c
+├─ LICENSE
+├─ README.md
+└─ port/
+   ├─ cbprintf_config.h
+   ├─ cbprintf_port.h
+   ├─ cbprintf_port.c
+   ├─ cbprintf_port_macros.h
+   └─ compat/zephyr/
+```
+
 - `cbprintf_packaged.c`：上游运行时打包、转换、解包代码。
 - `cbprintf.h` / `cbprintf_internal.h`：上游 API 和静态打包宏。
-- `cbprintf_config.h`：替代 Kconfig，关闭的 `CONFIG_*` 保持未定义。
-- `compat/zephyr/`：提供原始 `#include <zephyr/...>` 路径的兼容头。
-- `cbprintf_port.h` / `cbprintf_port_macros.h`：编译器属性、断言及必要工具宏。
-- `cbprintf_port.c`：只读区判断、诊断钩子、现有 `vfctprintf()` 格式化器桥接。
+- `port/cbprintf_config.h`：替代 Kconfig，关闭的 `CONFIG_*` 保持未定义。
+- `port/compat/zephyr/`：提供原始 `#include <zephyr/...>` 路径的兼容头。
+- `port/cbprintf_port.h` / `port/cbprintf_port_macros.h`：编译器属性、断言及必要工具宏。
+- `port/cbprintf_port.c`：只读区判断、诊断钩子、现有 `vfctprintf()` 格式化器桥接。
 - `tests/test_cbprintf.c`：主机和 MCU 共用的自测。
 - `tests/host_packaged.c`：仅用于 Windows 主机测试的 ABI 选择包装。
 
@@ -99,14 +117,24 @@ Windows x64 测试通过独立包装选择指针式 `va_list` 分支，原始源
 
 ## 验证
 
+工程编译（CMake 已包含根目录、`port/` 和 `port/compat/`）：
+
+```powershell
+cmake --preset Debug
+cmake --build --preset Debug
+```
+
+以下历史自测命令需要相应的 `tests/` 源码及 CMake 自测开关；当前目录未包含它们。
+
 项目根目录，主机 GCC：
 
 ```powershell
 gcc -std=gnu11 -O0 -g -Wall -Wextra -Werror `
   -DPRINTF_DISABLE_SUPPORT_PUTCHAR -DCBPRINTF_TEST_MAIN `
-  -I Libraries/zephyr_cbprintf -I Libraries/zephyr_cbprintf/compat -I Libraries/printf `
+  -I Libraries/zephyr_cbprintf -I Libraries/zephyr_cbprintf/port `
+  -I Libraries/zephyr_cbprintf/port/compat -I Libraries/printf `
   Libraries/zephyr_cbprintf/tests/host_packaged.c `
-  Libraries/zephyr_cbprintf/cbprintf_port.c Libraries/printf/printf.c `
+  Libraries/zephyr_cbprintf/port/cbprintf_port.c Libraries/printf/printf.c `
   Libraries/zephyr_cbprintf/tests/test_cbprintf.c -o build/Debug/cbprintf_test.exe
 ./build/Debug/cbprintf_test.exe
 ```

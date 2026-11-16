@@ -54,7 +54,7 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf/printf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_packaged.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_port.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/cbprintf_port.c
 )
 
 # Add include paths
@@ -66,7 +66,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf
-    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/compat
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/compat
 )
 
 # Add project symbols (macros)
