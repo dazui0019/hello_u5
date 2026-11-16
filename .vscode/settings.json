@@ -8,7 +8,7 @@
     "cortex-debug.variableUseNaturalFormat": false,
     "actionButtons": {
         "defaultColor": "none",
-        "reloadButton": null,
+        "reloadButton": "$(refresh)",
         "loadNpmCommands": false,
         "inheritGlobalCommands": false,
         "commands": [
@@ -44,7 +44,7 @@
             },
             {
                 "name": "$(debug-alt) 调试 / RTT",
-                "tooltip": "启动当前选中的 OpenOCD 调试配置；Debug + RTT 会自动打开 RTT 控制台",
+                "tooltip": "启动当前选中的 OpenOCD 调试配置;Debug + RTT 会自动打开 RTT 控制台",
                 "saveAll": true,
                 "useVsCodeApi": true,
                 "command": "workbench.action.debug.start"
