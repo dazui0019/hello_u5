@@ -8,9 +8,11 @@ LOG_MODULE_REGISTER(ccu_log);
 static osThreadId_t loggerTaskHandle;
 static osMessageQueueId_t logQueue;
 static osMutexId_t submitMutex;
+static uint32_t loggerTimestampMs;  // 当前被打印消息的时间戳
 
 typedef struct {
     uint8_t level;
+    uint32_t timestamp_ms;
     const char *tag;
     const char *file;
     const char *function;
@@ -30,6 +32,8 @@ const static osThreadAttr_t loggerTask_attributes = {
 int log_async_submit(uint8_t level, const char *tag, const char *file,
                      const char *function, long line, const char *format, ...)
 {
+    /* 入口立即采样，打包和排队耗时不计入日志发生时间。 */
+    uint32_t timestamp_ms = HAL_GetTick();
     if (__get_IPSR() != 0 || loggerTaskHandle == NULL) return -EPERM;
     osKernelState_t state = osKernelGetState();
     if (state != osKernelRunning && state != osKernelLocked) return -EPERM;
@@ -43,6 +47,7 @@ int log_async_submit(uint8_t level, const char *tag, const char *file,
     va_end(args);
     if (length >= 0) {
         pendingMessage.level = level;
+        pendingMessage.timestamp_ms = timestamp_ms;
         pendingMessage.tag = tag;
         pendingMessage.file = file;
         pendingMessage.function = function;
@@ -54,6 +59,18 @@ int log_async_submit(uint8_t level, const char *tag, const char *file,
     }
     osMutexRelease(submitMutex);
     return length;
+}
+
+uint32_t log_get_output_timestamp_ms(void)
+{
+    osKernelState_t state = osKernelGetState();
+    if (__get_IPSR() == 0 && loggerTaskHandle != NULL &&
+        (state == osKernelRunning || state == osKernelLocked) &&
+        osThreadGetId() == loggerTaskHandle) {
+        return loggerTimestampMs;
+    }
+    /* 其他任务同步打印时，独立采集当前时间，不使用异步消息的时间。 */
+    return HAL_GetTick();
 }
 
 static int LogOutputChar(int character, void *context)
@@ -71,6 +88,7 @@ void StartLoggerTask(void *argument)
     static LogMessage message;
     for (;;) {
         if (osMessageQueueGet(logQueue, &message, NULL, osWaitForever) != osOK) continue;
+        loggerTimestampMs = message.timestamp_ms;
         size_t length = 0;
         outputText[0] = '\0';
         int result = cbpprintf(LogOutputChar, &length, message.package);

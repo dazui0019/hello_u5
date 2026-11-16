@@ -27,6 +27,8 @@
  */
  
 #include "elog.h"
+#include "log.h"
+#include "printf.h"
 
 #include "main.h"
 #include "usart.h"
@@ -102,9 +104,13 @@ void elog_port_output_unlock(void) {
  * @return current time
  */
 const char *elog_port_get_time(void) {
-    
-    /* add your code here */
-    return "time";
+    /* EasyLogger 在 outputMutex 内调用；字符串转换仍留在输出阶段。 */
+    static char timeText[16];
+    uint32_t timestamp_ms = log_get_output_timestamp_ms();
+    snprintf(timeText, sizeof(timeText), "%lu.%03lu",
+             (unsigned long)(timestamp_ms / 1000U),
+             (unsigned long)(timestamp_ms % 1000U));
+    return timeText;
 }
 
 /**

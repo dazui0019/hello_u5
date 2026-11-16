@@ -11,6 +11,9 @@ extern "C" {
 
 void log_init();
 
+/* 供输出适配层获取时间：异步使用提交时间，同步使用当前时间，单位 ms。 */
+uint32_t log_get_output_timestamp_ms(void);
+
 int log_async_submit(uint8_t level, const char *tag, const char *file,
                      const char *function, long line, const char *format, ...)
     __attribute__((format(__printf__, 6, 7)));

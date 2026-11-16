@@ -10,7 +10,7 @@
 
 /* 异步日志队列可容纳的消息条数；可在此修改或通过全局编译定义覆盖。 */
 #ifndef LOG_ASYNC_QUEUE_LENGTH
-#define LOG_ASYNC_QUEUE_LENGTH 4U
+#define LOG_ASYNC_QUEUE_LENGTH 10U
 #endif
 
 /* 每条异步日志的参数包容量，单位为字节，包含参数、字符串副本和对齐填充。 */
