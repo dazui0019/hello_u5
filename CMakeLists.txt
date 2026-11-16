@@ -56,6 +56,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_packaged.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/cbprintf_port.c
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_smf/smf.c
 )
 
 # Add include paths
@@ -69,6 +71,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/compat
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_smf
 )
 
 # Add project symbols (macros)
