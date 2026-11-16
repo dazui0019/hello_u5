@@ -15,7 +15,7 @@
 
 /* 每条异步日志的参数包容量，单位为字节，包含参数、字符串副本和对齐填充。 */
 #ifndef LOG_ASYNC_PACKAGE_SIZE
-#define LOG_ASYNC_PACKAGE_SIZE 128U
+#define LOG_ASYNC_PACKAGE_SIZE 128U //  只是日志正文的大小, 算上TAG等前缀会超过 ELOG_LINE_BUF_SIZE
 #endif
 
 #if LOG_ASYNC_QUEUE_LENGTH < 1

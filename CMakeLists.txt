@@ -47,12 +47,13 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/App/app.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/log.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/elog_port/elog_port.c
 
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_port/elog_port.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_buf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf/printf.c
+
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_packaged.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/cbprintf_port.c
 )
@@ -62,7 +63,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
     ${CMAKE_CURRENT_SOURCE_DIR}/App
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs
-    ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/elog_port
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf
