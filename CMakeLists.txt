@@ -47,6 +47,8 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user sources here
     ${CMAKE_CURRENT_SOURCE_DIR}/App/app.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/log.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/fsm/fsm.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/hsm/hsm.c
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_port/elog_port.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_buf.c
@@ -79,6 +81,8 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Config
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/fsm
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/hsm
 )
 
 # Add project symbols (macros)
