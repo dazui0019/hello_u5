@@ -1,4 +1,6 @@
-#ifndef _HSM_H
-#define _HSM_H
+#ifndef APP_HSM_H
+#define APP_HSM_H
 
-#endif /* _HSM_H */
+void hsm_init(void);
+
+#endif /* APP_HSM_H */

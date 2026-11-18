@@ -8,14 +8,14 @@
 /*
  * 全工程统一配置：0 关闭，1 开启；也可通过全局编译选项覆盖。
  * 不要在某个业务 .c 中单独配置，这些选项会改变 SMF 结构体布局。
- * 默认保持平面状态机，不启用调试钩子。
+ * 启用父状态和初始子状态，供层次状态机示例使用。
  */
 #ifndef CONFIG_SMF_ANCESTOR_SUPPORT
-#define CONFIG_SMF_ANCESTOR_SUPPORT 0
+#define CONFIG_SMF_ANCESTOR_SUPPORT 1
 #endif
 
 #ifndef CONFIG_SMF_INITIAL_TRANSITION
-#define CONFIG_SMF_INITIAL_TRANSITION 0
+#define CONFIG_SMF_INITIAL_TRANSITION 1
 #endif
 
 #ifndef CONFIG_SMF_INSTRUMENTATION
