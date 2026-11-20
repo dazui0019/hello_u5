@@ -1,3 +1,6 @@
 [submodule "Libraries/RTT"]
 	path = Libraries/RTT
 	url = git@github.com:SEGGERMicro/RTT.git
+[submodule "Libraries/lwrb"]
+	path = Libraries/lwrb
+	url = git@github.com:MaJerle/lwrb.git

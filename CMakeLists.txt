@@ -99,3 +99,13 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
 
     # Add user defined libraries
 )
+
+# Convert the linked firmware to Intel HEX.
+add_custom_command(TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+    COMMAND "${CMAKE_OBJCOPY}" -O ihex
+            "$<TARGET_FILE:${CMAKE_PROJECT_NAME}>"
+            "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.hex"
+    BYPRODUCTS "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.hex"
+    COMMENT "Generating ${CMAKE_PROJECT_NAME}.hex"
+    VERBATIM
+)
