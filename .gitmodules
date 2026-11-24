@@ -4,3 +4,6 @@
 [submodule "Libraries/lwrb"]
 	path = Libraries/lwrb
 	url = git@github.com:MaJerle/lwrb.git
+[submodule "Libraries/lwshell"]
+	path = Libraries/lwshell
+	url = git@github.com:MaJerle/lwshell.git
