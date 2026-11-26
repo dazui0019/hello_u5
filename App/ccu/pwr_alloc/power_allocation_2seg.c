@@ -534,3 +534,12 @@ void power_alloc_2seg_init(struct power_alloc_machine_ctx *obj)
 {
     smf_set_initial(SMF_CTX(obj), &states_2seg[ALLOC_2SEG_IDLE]);
 }
+
+/* 判断状态机当前状态 */
+bool power_alloc_2seg_is_in_state(
+    const struct power_alloc_machine_ctx *machine,
+    enum power_alloc_2seg_state state)
+{
+    return (unsigned int)state < ALLOC_2SEG_STATE_COUNT &&
+           smf_get_current_leaf_state(&machine->ctx) == &states_2seg[state];
+}

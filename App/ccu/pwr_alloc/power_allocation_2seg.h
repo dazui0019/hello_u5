@@ -63,6 +63,8 @@ enum power_alloc_stop_reason
 };
 
 void power_alloc_2seg_init(struct power_alloc_machine_ctx *obj);
+bool power_alloc_2seg_is_in_state(const struct power_alloc_machine_ctx *machine,
+                                  enum power_alloc_2seg_state state);
 
 #ifdef __cplusplus
 }
