@@ -13,6 +13,16 @@
         "inheritGlobalCommands": false,
         "commands": [
             {
+                "name": "$(circuit-board) CubeMX",
+                "tooltip": "使用 STM32CubeMX 打开 hello_u5.ioc",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": [
+                    "CubeMX: Open Project"
+                ]
+            },
+            {
                 "name": "$(tools) 编译 Debug",
                 "tooltip": "保存文件并配置、编译 Debug 固件",
                 "saveAll": true,

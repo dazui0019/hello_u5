@@ -2,6 +2,25 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "CubeMX: Open Project",
+            "type": "process",
+            "command": "D:/ProgramFiles/STMicroelectronics/STM32CubeMX/STM32CubeMX.exe",
+            "args": [
+                "${workspaceFolder}/hello_u5.ioc"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "presentation": {
+                "reveal": "silent",
+                "panel": "dedicated"
+            },
+            "runOptions": {
+                "instanceLimit": 1
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "Debug: Prepare GDB",
             "type": "process",
             "command": "arm-none-eabi-gdb",
