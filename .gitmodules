@@ -7,3 +7,6 @@
 [submodule "Libraries/lwshell"]
 	path = Libraries/lwshell
 	url = git@github.com:MaJerle/lwshell.git
+[submodule "test/third_party/Unity"]
+	path = test/third_party/Unity
+	url = git@github.com:ThrowTheSwitch/Unity.git
