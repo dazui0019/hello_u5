@@ -49,29 +49,25 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs/log.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/fsm/fsm.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/hsm/hsm.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_port/elog_port.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_buf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_utils.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf/printf.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/cbprintf_packaged.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_cbprintf/port/cbprintf_port.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/zephyr_smf/smf.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT_printf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls/SEGGER_RTT_Syscalls_GCC.c
-
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/lwshell/lwshell/src/lwshell/lwshell.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_2seg.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_app.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_bsp.c
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_input.c
-
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pdu/pdu.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/shell/shell.c
 )
 
 # Add include paths
@@ -91,9 +87,12 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Config
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/lwshell/lwshell/src/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/lwshell/lwshell/src/include/lwshell
     ${CMAKE_CURRENT_SOURCE_DIR}/App/fsm
     ${CMAKE_CURRENT_SOURCE_DIR}/App/hsm
     ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/shell
 )
 
 # Add project symbols (macros)
