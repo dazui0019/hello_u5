@@ -64,13 +64,23 @@ target_sources(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/RTT/SEGGER_RTT_printf.c
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Syscalls/SEGGER_RTT_Syscalls_GCC.c
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_2seg.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_app.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_bsp.c
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc/power_allocation_port_input.c
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pdu/pdu.c
 )
 
 # Add include paths
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     # Add user defined include paths
+    ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/App
     ${CMAKE_CURRENT_SOURCE_DIR}/App/logs
+    ${CMAKE_CURRENT_SOURCE_DIR}/Libraries
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog/elog_port
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/elog
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/printf
@@ -83,6 +93,7 @@ target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/Libraries/RTT/Config
     ${CMAKE_CURRENT_SOURCE_DIR}/App/fsm
     ${CMAKE_CURRENT_SOURCE_DIR}/App/hsm
+    ${CMAKE_CURRENT_SOURCE_DIR}/App/ccu/pwr_alloc
 )
 
 # Add project symbols (macros)
