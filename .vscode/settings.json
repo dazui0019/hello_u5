@@ -43,6 +43,16 @@
                 ]
             },
             {
+                "name": "$(beaker) 单元测试",
+                "tooltip": "保存文件，配置、编译并运行 Unity 主机测试",
+                "saveAll": true,
+                "useVsCodeApi": true,
+                "command": "workbench.action.tasks.runTask",
+                "args": [
+                    "Unity: Run Host Tests"
+                ]
+            },
+            {
                 "name": "$(arrow-down) 下载 Debug",
                 "tooltip": "编译 Debug 固件并通过 OpenOCD 下载到 STM32U585",
                 "saveAll": true,

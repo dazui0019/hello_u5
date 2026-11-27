@@ -124,6 +124,56 @@
             ]
         },
         {
+            "label": "Unity: Configure Host Tests",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "-S", "test",
+                "-B", "build/host-tests",
+                "-G", "Ninja",
+                "-DCMAKE_C_COMPILER=gcc"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "hide": true,
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: Build Host Tests",
+            "type": "process",
+            "command": "cmake",
+            "args": [
+                "--build", "build/host-tests"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Unity: Configure Host Tests",
+            "hide": true,
+            "problemMatcher": []
+        },
+        {
+            "label": "Unity: Run Host Tests",
+            "type": "process",
+            "command": "ctest",
+            "args": [
+                "--test-dir", "build/host-tests",
+                "--verbose",
+                "--no-tests=error"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Unity: Build Host Tests",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "panel": "dedicated"
+            },
+            "problemMatcher": []
+        },
+        {
             "label": "OpenOCD: Flash Debug",
             "type": "process",
             "command": "${config:cortex-debug.openocdPath}",
