@@ -20,7 +20,9 @@
 LOG_MODULE_REGISTER(power_alloc_2seg);
 
 
-#define CONN_BOTH ((1U << POWER_ALLOC_2SEG_CONN1_INDEX) | (1U << POWER_ALLOC_2SEG_CONN2_INDEX))
+#define CONN1_MASK (1U << POWER_ALLOC_2SEG_CONN1_INDEX)
+#define CONN2_MASK (1U << POWER_ALLOC_2SEG_CONN2_INDEX)
+#define CONN_BOTH (CONN1_MASK | CONN2_MASK)
 
 #define GROUP_A 0x01U
 #define GROUP_B 0x02U
@@ -44,7 +46,7 @@ static void timed_entry(void *obj)
 /* 检查conn连接状态是否发生改变(prepare阶段) */
 static bool prep_request_changed(struct power_alloc_machine_ctx *m)
 {
-    if (m->conn_masks.req_mask == m->target.conn_mask)
+    if (m->req_conn_mask == m->target.conn_mask)
     {
         return false;
     }
@@ -72,10 +74,10 @@ static enum smf_state_result idle_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
-    if (m->conn_masks.req_mask != 0U)
+    if (m->req_conn_mask != 0U)
     {
-        m->target.conn_mask = m->conn_masks.req_mask;
-        m->target.par_closed = (m->conn_masks.req_mask != CONN_BOTH);
+        m->target.conn_mask = m->req_conn_mask;
+        m->target.par_closed = (m->req_conn_mask != CONN_BOTH);
         m->target.pdu_mask = GROUP_AB; /* 当前策略默认所有组都上电 */
         go(m, ALLOC_2SEG_WAIT_PAR);
     }
@@ -261,13 +263,13 @@ static enum smf_state_result active_run(void *obj)
     }
 
     /* 判断是否有旧枪需要继续充电 */
-    const uint8_t req_mask = m->conn_masks.req_mask;
+    const uint8_t req_conn_mask = m->req_conn_mask;
     const uint8_t current_conn_mask = m->target.conn_mask;
 
-    if (req_mask != current_conn_mask)
+    if (req_conn_mask != current_conn_mask)
     {
         const uint8_t current_pdu_mask = m->target.pdu_mask;
-        const uint8_t keep_pdu_mask = current_pdu_mask & current_conn_mask & req_mask;
+        const uint8_t keep_pdu_mask = current_pdu_mask & current_conn_mask & req_conn_mask;
         const uint8_t release_pdu_mask = current_pdu_mask & (uint8_t)~keep_pdu_mask;
 
         m->target.keep_pdu_mask = keep_pdu_mask;
@@ -296,25 +298,27 @@ static enum smf_state_result active_run(void *obj)
     {
     case ALLOC_MODE_A_ONLY:
         /* 只有 group A 在工作 */
-        target_param = m->conn[0].req;
+        target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN1_INDEX].pwr_req;
         device_pdu_set_output_vol(0, target_param.target_voltage_0d1v);
         device_pdu_set_output_cur(0, target_param.target_current_0d1a);
         break;
     case ALLOC_MODE_B_ONLY:
         /* 只有 group B 在工作 */
-        target_param = m->conn[1].req;
+        target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN2_INDEX].pwr_req;
         device_pdu_set_output_vol(1, target_param.target_voltage_0d1v);
         device_pdu_set_output_cur(1, target_param.target_current_0d1a);
         break;
     case ALLOC_MODE_PAR:
         /* 并机 */
-        if(m->conn[0].has_req)
+        if ((req_conn_mask & CONN1_MASK) != 0U)
         {
-            target_param = m->conn[0].req;
-        }else if(m->conn[1].has_req)
+            target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN1_INDEX].pwr_req;
+        }
+        else if ((req_conn_mask & CONN2_MASK) != 0U)
         {
-            target_param = m->conn[1].req;
-        }else
+            target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN2_INDEX].pwr_req;
+        }
+        else
         {
             //todo:
         }
@@ -325,10 +329,10 @@ static enum smf_state_result active_run(void *obj)
         break;
     case ALLOC_MODE_SPLIT:
         /* 各分支独立工作 */
-        target_param = m->conn[0].req;
+        target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN1_INDEX].pwr_req;
         device_pdu_set_output_vol(0, target_param.target_voltage_0d1v);
         device_pdu_set_output_cur(0, target_param.target_current_0d1a);
-        target_param = m->conn[1].req;
+        target_param = m->conn_pwr_reqs[POWER_ALLOC_2SEG_CONN2_INDEX].pwr_req;
         device_pdu_set_output_vol(1, target_param.target_voltage_0d1v);
         device_pdu_set_output_cur(1, target_param.target_current_0d1a);
         break;
@@ -378,7 +382,7 @@ static enum smf_state_result release_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
-    if (m->conn_masks.req_mask == 0U)
+    if (m->req_conn_mask == 0U)
     {
         m->target.keep_pdu_mask = 0U;
         m->run_mode = ALLOC_MODE_NONE;
@@ -420,7 +424,7 @@ static enum smf_state_result vol_match_run(void *obj)
         // todo: go STOP
     }
 
-    uint16_t target_vol = m->conn[m->target.keep_pdu_mask].req.target_voltage_0d1v;
+    uint16_t target_vol = m->conn_pwr_reqs[m->target.keep_pdu_mask].pwr_req.target_voltage_0d1v;
     device_pdu_set_output_vol(m->target.release_pdu_mask, target_vol);
     device_pdu_set_output_cur(m->target.release_pdu_mask, 0U);
     device_pdu_set_current_enable(m->target.release_pdu_mask, true);
@@ -444,10 +448,10 @@ static enum smf_state_result reconfig_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
-    if (m->conn_masks.req_mask != 0U)
+    if (m->req_conn_mask != 0U)
     {
-        m->target.conn_mask = m->conn_masks.req_mask;
-        m->target.par_closed = (m->conn_masks.req_mask != CONN_BOTH);
+        m->target.conn_mask = m->req_conn_mask;
+        m->target.par_closed = (m->req_conn_mask != CONN_BOTH);
         m->target.pdu_mask = GROUP_AB; /* 当前策略默认所有组都上电 */
         go(m, ALLOC_2SEG_WAIT_PAR);
     }
@@ -469,9 +473,8 @@ static enum smf_state_result stop_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
-    if (m->conn_masks.req_mask != 0U)
+    if (m->req_conn_mask != 0U)
     {
-        m->conn_masks.target_mask = m->conn_masks.req_mask;
         smf_set_state(SMF_CTX(m), &states_2seg[ALLOC_2SEG_WAIT_PAR]);
         return SMF_EVENT_HANDLED;
     }
@@ -499,9 +502,8 @@ static enum smf_state_result fault_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
-    if (m->conn_masks.req_mask != 0U)
+    if (m->req_conn_mask != 0U)
     {
-        m->conn_masks.target_mask = m->conn_masks.req_mask;
         smf_set_state(SMF_CTX(m), &states_2seg[ALLOC_2SEG_WAIT_PAR]);
     }
 

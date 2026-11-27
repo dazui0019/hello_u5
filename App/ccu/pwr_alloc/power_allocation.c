@@ -37,21 +37,20 @@ struct power_alloc_machine_ctx power_alloc_machine = {0};
         break;
     }
 
-    struct power_alloc_conn_input* conn_input = &power_alloc_machine.conn[0];
-
     for (;;)
     {
-        uint8_t req_mask = 0U;
+        uint8_t req_conn_mask = 0U;
         for(uint8_t conn_idx = 0; conn_idx < CHARGE_CONNECTOR_NUM; conn_idx++)
         {
-            conn_input[conn_idx].has_req = power_alloc_conn_has_req(conn_idx);
-            conn_input[conn_idx].req_valid = power_alloc_get_conn_req(conn_idx, &conn_input[conn_idx].req);
-            if (conn_input[conn_idx].has_req != 0U)
+            bool has_req = (power_alloc_conn_has_req(conn_idx) != 0U);
+            struct power_alloc_pwr_req *conn_pwr_req = &power_alloc_machine.conn_pwr_reqs[conn_idx];
+            conn_pwr_req->req_valid = (power_alloc_get_conn_req(conn_idx, &conn_pwr_req->pwr_req) != 0U);
+            if (has_req)
             {
-                req_mask = (uint8_t)(req_mask | (1U << conn_idx));
+                req_conn_mask = (uint8_t)(req_conn_mask | (1U << conn_idx));
             }
         }
-        power_alloc_machine.conn_masks.req_mask = req_mask;
+        power_alloc_machine.req_conn_mask = req_conn_mask;
 
         if (smf_run_state(SMF_CTX(&power_alloc_machine)) != 0)
         {

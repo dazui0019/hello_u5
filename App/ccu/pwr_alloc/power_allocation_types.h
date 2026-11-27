@@ -7,17 +7,10 @@
 #include "app/ccu/charge_model/charge_model_types.h"
 #include "Libraries/zephyr_smf/smf.h"
 
-struct power_alloc_conn_input
+struct power_alloc_pwr_req
 {
-    uint8_t has_req;    /* 是否申请资源 */
-    uint8_t req_valid;  /* 需求参数是否读取成功 */
-    CHARGE_POWER_ALLOCATION_PARAM_T req;
-};
-
-struct power_alloc_conn_masks
-{
-    uint8_t req_mask;       /* 实时状态：bit0 为 connector1，bit1 为 connector2 */
-    uint8_t target_mask;    /* 本次分配目标：bit0 为 connector1，bit1 为 connector2 */
+    bool req_valid;  /* 本拍是否成功读到需求功率参数 */
+    CHARGE_POWER_ALLOCATION_PARAM_T pwr_req;
 };
 
 struct ContactorOperation
@@ -56,8 +49,8 @@ struct power_alloc_target
 struct power_alloc_machine_ctx
 {
     struct smf_ctx ctx; /* 必须放在第一个成员 */
-    struct power_alloc_conn_input conn[CHARGE_CONNECTOR_NUM];
-    struct power_alloc_conn_masks conn_masks;
+    struct power_alloc_pwr_req conn_pwr_reqs[CHARGE_CONNECTOR_NUM];
+    uint8_t req_conn_mask; /* 本拍申请资源的枪，bit0 对应 C1，bit1 对应 C2 */
     enum power_alloc_mode run_mode;
     struct power_alloc_target target;
     uint32_t state_start_tick;
