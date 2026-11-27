@@ -465,19 +465,12 @@ static void stop_entry(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
     (void)m;
-
-    LOG_I("entry power_alloc_active");
 }
 
 static enum smf_state_result stop_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
-
-    if (m->req_conn_mask != 0U)
-    {
-        smf_set_state(SMF_CTX(m), &states_2seg[ALLOC_2SEG_WAIT_PAR]);
-        return SMF_EVENT_HANDLED;
-    }
+    (void)m;
 
     return SMF_EVENT_HANDLED;
 }
@@ -485,7 +478,6 @@ static enum smf_state_result stop_run(void *obj)
 static void stop_exit(void *obj)
 {
     (void)obj;
-    LOG_I("exit power_alloc_active");
 }
 
 /* ---------- fault ---------- */
@@ -494,18 +486,12 @@ static void fault_entry(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
     (void)m;
-
-    LOG_I("entry power_alloc_active");
 }
 
 static enum smf_state_result fault_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
-
-    if (m->req_conn_mask != 0U)
-    {
-        smf_set_state(SMF_CTX(m), &states_2seg[ALLOC_2SEG_WAIT_PAR]);
-    }
+    (void)m;
 
     return SMF_EVENT_HANDLED;
 }
@@ -513,7 +499,6 @@ static enum smf_state_result fault_run(void *obj)
 static void fault_exit(void *obj)
 {
     (void)obj;
-    LOG_I("exit power_alloc_active");
 }
 
 /* 参数顺序：entry、run、exit、parent、initial */
