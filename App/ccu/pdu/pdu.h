@@ -31,7 +31,9 @@ bool device_pdu_get_output_vol(uint8_t pdu_idx, uint16_t *voltage_0d1v);
 bool device_pdu_set_output_cur(uint8_t pdu_idx, uint32_t total_current_0d1a);
 
 /* 控制充电电流输出的使能，不切断模块供电。 */
-bool device_pdu_set_current_enable(uint8_t pdu_idx, bool enable);
+bool device_pdu_set_output_state(uint8_t pdu_idx, bool enable);
+
+bool device_pdu_get_output_state(uint8_t pdu_idx);
 
 /* 按允许压差检查本次参与的模块是否电压到位，不阻塞等待。 */
 enum device_pdu_voltage_status device_pdu_get_voltage_status(uint8_t pdu_idx,

@@ -28,6 +28,7 @@ LOG_MODULE_REGISTER(power_alloc_2seg);
 #define GROUP_B 0x02U
 #define GROUP_AB (GROUP_A | GROUP_B)
 #define GROUP_COUNT 2U
+#define PAR_CLOSE_DELTA_LIMIT_0D1V 100U /* 10.0 V */
 
 static const struct smf_state states_2seg[ALLOC_2SEG_STATE_COUNT];
 
@@ -66,6 +67,16 @@ static void disable_group(uint8_t idx)
 {
     (void)device_pdu_set_output_cur(idx, 0U);
     (void)device_pdu_set_current_enable(idx, false);
+}
+
+/* 检查两侧实测电压的压差 */
+static bool par_voltage_within_limit(uint16_t va_0d1v, uint16_t vb_0d1v)
+{
+    uint32_t delta_0d1v = (va_0d1v >= vb_0d1v)
+        ? (uint32_t)va_0d1v - vb_0d1v
+        : (uint32_t)vb_0d1v - va_0d1v;
+
+    return delta_0d1v < PAR_CLOSE_DELTA_LIMIT_0D1V;
 }
 
 /* ---------- IDLE ---------- */
@@ -109,7 +120,35 @@ static enum smf_state_result wait_par_run(void *obj)
 
     // todo: 动作前不要求所有pdu关机, 但至少有一侧的输出电流为0
     // todo: 并且压差不能太大?
-    (void)power_alloc_set_par_contactor(0U, m->target.par_closed);
+    // 1. 如果两侧都没有输出电流(冷启动), 可以正常吸合
+    // 2. 任意一侧有输出电流(充电中并机情况), 需要电压匹配(这个需要在转入wait_par状态前准备就绪)
+    //  a. 并机的情况下两侧都是开启输出的, 所以还需要检查一下电流设置, 不能有过大冲击
+    bool pdu_output_state[2] = {0};
+    uint16_t pdu_a_vol, pdu_b_vol;
+
+    pdu_output_state[0] = device_pdu_get_output_state(0);
+    pdu_output_state[1] = device_pdu_get_output_state(1);
+
+    bool voltage_ok =
+        device_pdu_get_output_vol(0U, &pdu_a_vol) &&
+        device_pdu_get_output_vol(1U, &pdu_b_vol) &&
+        par_voltage_within_limit(pdu_a_vol, pdu_b_vol);
+
+    /* 充电中的情况 */
+    if(pdu_output_state[0] || pdu_output_state[1])
+    {
+        // ? 需要检测另一侧的输出电流设定？
+        ;
+    }
+
+    if(voltage_ok)
+    {
+        (void)power_alloc_set_par_contactor(0U, m->target.par_closed);
+    }
+    else
+    {
+        /* 压差过大 */
+    }
 
     uint8_t par_state = power_alloc_read_par_feedback(0);
     if(par_state == m->target.par_closed)

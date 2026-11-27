@@ -43,10 +43,16 @@ bool device_pdu_set_output_cur(uint8_t pdu_idx, uint32_t total_current_0d1a)
     return false;
 }
 
-bool device_pdu_set_current_enable(uint8_t pdu_idx, bool enable)
+bool device_pdu_set_output_state(uint8_t pdu_idx, bool enable)
 {
     (void)pdu_idx;
     (void)enable;
+    return false;
+}
+
+bool device_pdu_get_output_state(uint8_t pdu_idx)
+{
+    (void)pdu_idx;
     return false;
 }
 
