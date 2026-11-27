@@ -74,6 +74,16 @@ static enum smf_state_result idle_run(void *obj)
 {
     struct power_alloc_machine_ctx *m = obj;
 
+    // todo: 如果par和pdu的状态不是断开和关机则跳转至fault(或者stop)
+    bool pdu_a_pwred = device_pdu_get_power_state(0);
+    bool pdu_b_pwred = device_pdu_get_power_state(1);
+    uint8_t par_state = power_alloc_read_par_feedback(0);
+    if(pdu_a_pwred || pdu_b_pwred || par_state)
+    {
+        go(m, ALLOC_2SEG_FAULT);
+    }
+
+    /* 整理target */
     if (m->req_conn_mask != 0U)
     {
         m->target.conn_mask = m->req_conn_mask;
